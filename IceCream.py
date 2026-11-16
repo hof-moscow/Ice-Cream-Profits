@@ -33,7 +33,7 @@ class IceCreamWindow(QWidget):
         self.file_label = QLabel("No file selected")
         layout.addWidget(self.file_label)
 
-        # Matplotlib graph
+
         self.figure = Figure(figsize=(7, 5))
         self.canvas = FigureCanvas(self.figure)
         self.toolbar = NavigationToolbar(self.canvas, self)
@@ -51,6 +51,7 @@ class IceCreamWindow(QWidget):
 
         self.draw_plot()
 
+
     def choose_file(self):
         file_name, _ = QFileDialog.getOpenFileName(
             self, "Select Ice Cream Data", "", "CSV Files (*.csv)"
@@ -58,20 +59,45 @@ class IceCreamWindow(QWidget):
 
         if file_name:
             self.selected_file = file_name
-            self.file_label.setText(file_name)
+            self.temperatures = []
+            self.revenues = []
 
+            with open(file_name, "r") as f:
+                next(f)  # Skip the header
+
+                for line in f:
+                    temperature, revenue = line.strip().split(",")
+
+                    self.temperatures.append(float(temperature))
+                    self.revenues.append(float(revenue))
+
+            self.file_label.setText(
+                f"Loaded {len(self.temperatures)} records"
+            )
+
+            self.draw_plot()
+
+
+    
     def draw_plot(self):
         self.figure.clear()
         ax = self.figure.add_subplot(111)
 
-        # Temporary graph
-        ax.plot([1, 2, 3, 4], [2, 4, 3, 6])
+        if self.temperatures:
+            ax.scatter(self.temperatures, self.revenues, s=1)
+        else:
+            # Temporary graph before loading a file
+            ax.plot([1, 2, 3, 4], [2, 4, 3, 6])
 
-        ax.set_title("Example Graph")
-        ax.set_xlabel("X")
-        ax.set_ylabel("Y")
+        ax.set_title("Ice Cream Revenue vs Temperature")
+        ax.set_xlabel("Temperature")
+        ax.set_ylabel("Revenue")
+
+        ax.spines["top"].set_visible(False)
+        ax.spines["right"].set_visible(False)
 
         self.canvas.draw()
+
 
 
 if __name__ == "__main__":
