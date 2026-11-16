@@ -4,6 +4,7 @@ from PySide6.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QVBoxL
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
+import numpy as np
 
 
 class IceCreamWindow(QWidget):
@@ -83,10 +84,30 @@ class IceCreamWindow(QWidget):
         self.figure.clear()
         ax = self.figure.add_subplot(111)
 
+
         if self.temperatures:
-            ax.scatter(self.temperatures, self.revenues, s=1)
+            ax.scatter(self.temperatures, self.revenues, s=1, label="Data")
+
+            coefficients = np.polyfit(self.temperatures, self.revenues, 1)
+            line_function = np.poly1d(coefficients)
+
+            line_x = np.linspace(min(self.temperatures), max(self.temperatures), 100)
+            line_y = line_function(line_x)
+
+            ax.plot(line_x, line_y, color="red", label="Trend Line")
+
+            ax.text(
+                0.05, 0.95,
+                f"y = {coefficients[0]:.2f}x + {coefficients[1]:.2f}",
+                transform=ax.transAxes,
+                color="red",
+                verticalalignment="top"
+            )
+
+            ax.legend()
+
         else:
-            # Temporary graph before loading a file
+            # גרף זמני לפני טעינת נתונים
             ax.plot([1, 2, 3, 4], [2, 4, 3, 6])
 
         ax.set_title("Ice Cream Revenue vs Temperature")
