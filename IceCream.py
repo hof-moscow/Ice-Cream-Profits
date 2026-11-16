@@ -1,4 +1,4 @@
-
+from About import AboutWindow
 import sys
 from PySide6.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QVBoxLayout, QFileDialog
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
@@ -13,7 +13,7 @@ class IceCreamWindow(QWidget):
         self.selected_file = ""
         self.temperatures = []
         self.revenues = []
-
+        self.about_window = AboutWindow()
         self.initUI()
 
     def initUI(self):
@@ -40,6 +40,9 @@ class IceCreamWindow(QWidget):
 
         layout.addWidget(self.toolbar)
         layout.addWidget(self.canvas)
+        self.about_button = QPushButton("About")
+        self.about_button.clicked.connect(self.about_window.show)
+        layout.addWidget(self.about_button)
 
         self.setLayout(layout)
 
