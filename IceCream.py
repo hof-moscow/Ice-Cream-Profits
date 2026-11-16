@@ -1,6 +1,6 @@
 from About import AboutWindow
 import sys
-from PySide6.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QVBoxLayout, QFileDialog
+from PySide6.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QVBoxLayout, QFileDialog,QCheckBox
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
@@ -33,6 +33,12 @@ class IceCreamWindow(QWidget):
 
         self.file_label = QLabel("No file selected")
         layout.addWidget(self.file_label)
+
+        self.trend_checkbox = QCheckBox("Show Trend Line")
+        self.trend_checkbox.setChecked(True)
+        self.trend_checkbox.clicked.connect(self.draw_plot)
+        layout.addWidget(self.trend_checkbox)
+
 
 
         self.figure = Figure(figsize=(7, 5))
@@ -85,26 +91,29 @@ class IceCreamWindow(QWidget):
         ax = self.figure.add_subplot(111)
 
 
+   
         if self.temperatures:
             ax.scatter(self.temperatures, self.revenues, s=1, label="Data")
 
-            coefficients = np.polyfit(self.temperatures, self.revenues, 1)
-            line_function = np.poly1d(coefficients)
+            if self.trend_checkbox.isChecked():
+                coefficients = np.polyfit(self.temperatures, self.revenues, 1)
+                line_function = np.poly1d(coefficients)
 
-            line_x = np.linspace(min(self.temperatures), max(self.temperatures), 100)
-            line_y = line_function(line_x)
+                line_x = np.linspace(min(self.temperatures), max(self.temperatures), 100)
+                line_y = line_function(line_x)
 
-            ax.plot(line_x, line_y, color="red", label="Trend Line")
+                ax.plot(line_x, line_y, color="red", label="Trend Line")
 
-            ax.text(
-                0.05, 0.95,
-                f"y = {coefficients[0]:.2f}x + {coefficients[1]:.2f}",
-                transform=ax.transAxes,
-                color="red",
-                verticalalignment="top"
-            )
+                ax.text(
+                    0.05, 0.95,
+                    f"y = {coefficients[0]:.2f}x + {coefficients[1]:.2f}",
+                    transform=ax.transAxes,
+                    color="red",
+                    verticalalignment="top"
+                )
 
             ax.legend()
+
 
         else:
             # גרף זמני לפני טעינת נתונים

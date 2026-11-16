@@ -26,3 +26,25 @@ QPushButton {
 QPushButton:hover {
     background-color: steelblue;
 }
+
+QCheckBox {
+    color: darkblue;
+    font-weight: bold;
+    padding: 10px;
+    border: 1px solid lightgray;
+    border-radius: 6px;
+    background-color: aliceblue;
+}
+
+QCheckBox::indicator {
+    width: 18px;
+    height: 18px;
+    border: 2px solid darkblue;
+    border-radius: 4px;
+    background-color: white;
+}
+
+QCheckBox::indicator:checked {
+    background-color: royalblue;
+    border: 2px solid darkblue;
+}
