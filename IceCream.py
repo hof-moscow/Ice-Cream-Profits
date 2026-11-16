@@ -47,6 +47,11 @@ class IceCreamWindow(QWidget):
 
         layout.addWidget(self.toolbar)
         layout.addWidget(self.canvas)
+
+        self.stats_label = QLabel("Statistics will appear after loading a file")
+        self.stats_label.setObjectName("statsLabel")
+        layout.addWidget(self.stats_label)
+
         self.about_button = QPushButton("About")
         self.about_button.clicked.connect(self.about_window.show)
         layout.addWidget(self.about_button)
@@ -80,6 +85,17 @@ class IceCreamWindow(QWidget):
 
             self.file_label.setText(
                 f"Loaded {len(self.temperatures)} records"
+            )
+
+            count = len(self.temperatures)
+            min_temp = min(self.temperatures)
+            max_temp = max(self.temperatures)
+            avg_revenue = sum(self.revenues) / len(self.revenues)
+
+            self.stats_label.setText(
+                f"Records: {count}  |  "
+                f"Temperature: {min_temp:.1f} - {max_temp:.1f}  |  "
+                f"Average Revenue: {avg_revenue:.2f}"
             )
 
             self.draw_plot()

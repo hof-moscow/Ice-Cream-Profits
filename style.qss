@@ -48,3 +48,12 @@ QCheckBox::indicator:checked {
     background-color: royalblue;
     border: 2px solid darkblue;
 }
+
+QLabel#statsLabel {
+    background-color: aliceblue;
+    color: darkblue;
+    border: 1px solid lightgray;
+    border-radius: 6px;
+    padding: 12px;
+    font-weight: bold;
+}
